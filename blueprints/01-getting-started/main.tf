@@ -5,7 +5,7 @@ data "aws_route53_zone" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name   = "cbci-bp-${var.name}"
+  name  = var.name == "" ? "cbci-bp01" : "cbci-bp01-${var.name}"
   region = var.region
 
   vpc_name             = "${local.name}-vpc"
@@ -13,10 +13,10 @@ locals {
   kubeconfig_file      = "kubeconfig_${local.name}.yaml"
   kubeconfig_file_path = abspath("${path.root}/${local.kubeconfig_file}")
 
-  vpc_cidr = var.vpc_cidr
+  vpc_cidr = "10.0.0.0/16"
 
   #https://docs.cloudbees.com/docs/cloudbees-common/latest/supported-platforms/cloudbees-ci-cloud#_kubernetes
-  k8s_version = var.k8s_version
+  k8s_version = "1.27"
 
   route53_zone_id  = data.aws_route53_zone.this.id
   route53_zone_arn = data.aws_route53_zone.this.arn
